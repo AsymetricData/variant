@@ -1,0 +1,109 @@
+<?php
+
+use CedricCourteau\Variant\Variant;
+
+require $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
+
+define('DEFAULT_PATH', 'src/');
+define('COMPOSER_JSON_PATH', (dirname($_composer_autoload_path) ?? '') . '/../composer.json');
+
+// Parse arguments
+$args = getopt("", ["force", "path:", "namespace:", "help"]);
+$force = isset($args['force']);
+$searchPath = isset($args['path']) ? rtrim($args['path'], "/") : DEFAULT_PATH;
+$namespace = $args['namespace'] ?? null;
+
+if (isset($args['help'])) {
+    showHelp();
+    exit(0);
+}
+
+// Output force status
+echo $force ? "--force option detected. Force mode is ON." . PHP_EOL : "No --force option detected. Force mode is OFF." . PHP_EOL;
+
+// Validate and set the search path
+if (!is_dir($searchPath)) {
+    printErrorAndExit("Error: Specified path '$searchPath' does not exist.");
+} else {
+    echo "--path option detected. Search path set to: $searchPath" . PHP_EOL;
+}
+
+// Retrieve namespace from composer.json if not provided via --namespace
+if (!$namespace) {
+    $namespace = getNamespaceFromComposerJson();
+    if (!$namespace) {
+        printErrorAndExit("Unable to retrieve namespace from composer.json. Please provide the --namespace option.");
+    } else {
+        echo "Namespace inferred from composer.json: $namespace" . PHP_EOL;
+    }
+} else {
+    echo "--namespace option detected. Using provided namespace: $namespace" . PHP_EOL;
+}
+
+runVariant($searchPath, $force, $namespace);
+
+/**
+ * Displays help information for the script.
+ */
+function showHelp(): void
+{
+    echo "Usage: php variant [options]" . PHP_EOL;
+    echo "Options:" . PHP_EOL;
+    echo "  --force          Force mode; recreate files even if they exist." . PHP_EOL;
+    echo "  --path=<path>    Specify the path to search in (default: src/)." . PHP_EOL;
+    echo "  --namespace=<ns> Specify the namespace to use." . PHP_EOL;
+    echo "  --help           Display this help message." . PHP_EOL;
+}
+
+/**
+ * Retrieves the PSR-4 namespace from composer.json.
+ *
+ * @return string|null Returns the inferred namespace, or null if it cannot be determined.
+ */
+function getNamespaceFromComposerJson(): ?string
+{
+    if (!file_exists(COMPOSER_JSON_PATH)) {
+        echo "Error: composer.json not found at: " . COMPOSER_JSON_PATH . PHP_EOL;
+        return null;
+    }
+
+    $composerData = json_decode(file_get_contents(COMPOSER_JSON_PATH), true);
+
+    if (isset($composerData['autoload']['psr-4'])) {
+        // Get the first PSR-4 namespace entry
+        $namespace = array_key_first($composerData['autoload']['psr-4']);
+        return rtrim($namespace, "\\");
+    }
+
+    echo "Error: No PSR-4 namespace found in composer.json." . PHP_EOL;
+    return null;
+}
+
+/**
+ * Prints an error message and exits the script with status code 1.
+ *
+ * @param string $message Error message to display before exiting.
+ */
+function printErrorAndExit(string $message): void
+{
+    echo $message . PHP_EOL;
+    exit(1);
+}
+
+/**
+ * Runs the Variant class logic with the given path, force, and namespace values.
+ *
+ * @param string $searchPath Directory to search in.
+ * @param bool $force Whether to force recreation of files.
+ * @param string $namespace Namespace to use for file generation.
+ */
+function runVariant(string $searchPath, bool $force, string $namespace): void
+{
+    $variant = new Variant($searchPath, $force, $namespace);
+
+    if ($force) {
+        echo "Running with force mode enabled..." . PHP_EOL;
+    }
+
+    $variant->run();
+}

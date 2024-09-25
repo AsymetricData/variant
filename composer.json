@@ -1,0 +1,26 @@
+{
+  "name": "cedriccourteau/variant",
+  "description": "A simple ValueObject and ResultType generator for PHP",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "CedricCourteau\\Variant\\": "src/"
+    }
+  },
+  "require-dev": {
+    "pestphp/pest": "^3.2",
+    "friendsofphp/php-cs-fixer": "^3.64",
+    "phpstan/phpstan": "^1.12"
+  },
+  "require": {
+    "php": "^8.0"
+  },
+  "bin": [
+    "bin/variant"
+  ],
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
+}

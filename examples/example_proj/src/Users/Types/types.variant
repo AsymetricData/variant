@@ -1,0 +1,14 @@
+type UserKind {
+    User(string name, int companyId)
+    Moderator(string name, int companyId)
+    Admin(string name)
+}
+
+type GetUserError{
+    NotFound
+    InvalidCredentials
+    Unauthorized
+    BusyDB
+}
+
+result GetUserResult(UserKind, GetUserError)
