@@ -10,9 +10,25 @@
 
 ![Screenshot](screenshot.png)
 
-Creating ValueObject or ResultType in PHP takes too much time compared as creating custom types in others languages.
-This tool aims to make this process easier with a custom and simple language to prototype them.
+Creating Value Objects or Result Types in PHP can be time-consuming compared to creating custom types in other languages. Variant aims to simplify this process by providing a custom, easy-to-use language for prototyping them.
 
+Here's an example of how a type can be generated with Variant:
+```go
+type UserKind {
+	User(string name, int companyId)
+	Moderator(string name, int companyId)
+	Admin(string name)
+}
+
+type UpdateError {
+	Unauhtorized
+	NotFound
+}
+
+record Company(string name, int id)
+
+result UpdateCompanyResult(Company, UpdateError)
+```
 
 ## Getting Started
 
@@ -29,7 +45,7 @@ composer require cedriccourteau/variant
 
 ## Usage
 
-1. Add a file with the `.variant` extension the desired folder. Like `src/Users/Types/users.variant`
+1. Add a file with the `.variant` extension the desired folder, such as `src/Users/Types/users.variant`
 2. Define your types in this file
 3. Launch `php ./vendor/bin/variant`
 4. Voilà
@@ -108,7 +124,7 @@ Options:
 ```
 ## Contributing
 
-Contributions are  welcome.
+Contributions are welcome! Feel free to fork, use, and improve the project.
 
 ## License
 
