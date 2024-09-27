@@ -1,6 +1,20 @@
 {
   "name": "cedriccourteau/variant",
   "description": "A simple ValueObject and ResultType generator for PHP",
+  "authors": [
+    {
+      "name": "Cédric Courteau",
+      "homepage": "https://courteau.dev",
+      "role": "Developer"
+    }
+  ],
+  "keywords": [
+    "dev",
+    "generator",
+    "value object",
+    "variants",
+    "results"
+  ],
   "type": "library",
   "autoload": {
     "psr-4": {
