@@ -25,7 +25,7 @@ echo $force ? "--force option detected. Force mode is ON." . PHP_EOL : "No --for
 if (!is_dir($searchPath)) {
     printErrorAndExit("Error: Specified path '$searchPath' does not exist.");
 } else {
-    echo "--path option detected. Search path set to: $searchPath" . PHP_EOL;
+    echo "No --path option detected. Search path set to: $searchPath" . PHP_EOL;
 }
 
 // Retrieve namespace from composer.json if not provided via --namespace
