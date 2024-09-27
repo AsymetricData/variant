@@ -17,6 +17,10 @@
   ],
   "type": "library",
   "autoload": {
+    "exclude-from-classmap": [
+      "/tests/",
+      "/examples/"
+    ],
     "psr-4": {
       "CedricCourteau\\Variant\\": "src/"
     }
