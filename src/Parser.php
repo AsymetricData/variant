@@ -2,6 +2,7 @@
 
 namespace CedricCourteau\Variant;
 
+use CedricCourteau\Variant\Tokens\Option;
 use CedricCourteau\Variant\Tokens\Record;
 use CedricCourteau\Variant\Tokens\Result;
 use CedricCourteau\Variant\Tokens\TokensInterface;
@@ -67,6 +68,7 @@ final class Parser
                 $token = match(trim($this->buffer)) {
                     'type' => $this->parseType($rest),
                     'result' => $this->captureResult($rest),
+                    'option' => $this->captureOption($rest),
                     'record' => $this->captureRecords($rest, true)[0],
                     '#' => $this->skipLine($rest),
                     default => null,
@@ -138,6 +140,12 @@ final class Parser
     {
         $record = $this->captureRecords($rest, true)[0];
         return new Result($record->name, $record->args);
+    }
+
+    private function captureOption(string $rest): Option
+    {
+        $option = $this->captureRecords($rest, true)[0];
+        return new Option($option->name, $option->args);
     }
 
     private function skipLine(string $rest): void

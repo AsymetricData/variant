@@ -1,6 +1,7 @@
 <?php
 
 use CedricCourteau\Variant\Parser;
+use CedricCourteau\Variant\Tokens\Option;
 use CedricCourteau\Variant\Tokens\Record;
 use CedricCourteau\Variant\Tokens\Type;
 use CedricCourteau\Variant\Tokens\Result;
@@ -107,6 +108,20 @@ it('parses a result correctly', function () {
     $result = $tokens[0];
     expect($result->getParamType(0))->toBe('string');
     expect($result->getParamType(1))->toBe('null');
+});
+it('parses an option correctly', function () {
+    $toParse = "option UsersOption(string)";
+    $parser = new Parser($toParse);
+    $parser->parse();
+    $tokens = $parser->getTokens();
+
+    // Expecting the token to be a Result
+    expect($tokens)->toHaveCount(1);
+    expect($tokens[0])->toBeInstanceOf(Option::class);
+
+    // Check that the result name and args are correct
+    $result = $tokens[0];
+    expect($result->getParamType(0))->toBe('string');
 });
 
 it('parses multiple records in a type', function () {
